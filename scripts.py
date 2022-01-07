@@ -4,6 +4,8 @@ import random
 
 import django
 
+from django.core.exceptions import ObjectDoesNotExist
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
 
@@ -65,15 +67,19 @@ if __name__ == "__main__":
                         help="имя ученика")
     parser.add_argument("-s", "--subjects", nargs="+", type=str)
     args = parser.parse_args()
-    child = find_child(args.name)
 
-    fix_marks(child)
-    remove_chastisements(child)
+    try:
+        child = find_child(args.name)
+    except ObjectDoesNotExist:
+        print(f"Ученика с именем {args.name} нет в базе данных")
+    else:
+        fix_marks(child)
+        remove_chastisements(child)
 
-    subjects = args.subjects
-    if subjects:
-        for subject in subjects:
-            try:
-                create_commendation(child, subject.capitalize())
-            except IndexError:
-                print(f'Предмета "{subject}" не найдено в базе')
+        subjects = args.subjects
+        if subjects:
+            for subject in subjects:
+                try:
+                    create_commendation(child, subject.capitalize())
+                except IndexError:
+                    print(f'Предмета "{subject}" не найдено в базе')
