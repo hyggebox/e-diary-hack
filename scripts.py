@@ -46,17 +46,19 @@ def create_commendation(schoolkid, subject_title):
                      "Я вижу, как ты стараешься!", "Ты растешь над собой!",
                      "Ты многое сделал, я это вижу!",
                      "Теперь у тебя точно все получится!"]
-    lessons = Lesson.objects.filter(year_of_study=schoolkid.year_of_study,
-                                    group_letter=schoolkid.group_letter,
-                                    subject__title=subject_title)
-    chosen_lesson = lessons[0]
-    Commendation.objects.create(
-        text=random.choice(commendations),
-        created=chosen_lesson.date,
-        schoolkid=schoolkid,
-        subject=chosen_lesson.subject,
-        teacher=chosen_lesson.teacher
-    )
+    lesson = Lesson.objects.filter(year_of_study=schoolkid.year_of_study,
+                                   group_letter=schoolkid.group_letter,
+                                   subject__title=subject_title).first()
+    if lesson:
+        Commendation.objects.create(
+            text=random.choice(commendations),
+            created=lesson.date,
+            schoolkid=schoolkid,
+            subject=lesson.subject,
+            teacher=lesson.teacher
+        )
+    else:
+        raise ObjectDoesNotExist
 
 
 if __name__ == "__main__":
@@ -84,5 +86,6 @@ if __name__ == "__main__":
             for subject in subjects:
                 try:
                     create_commendation(child, subject.capitalize())
-                except IndexError:
-                    print(f'Предмета "{subject}" не найдено в базе')
+                except ObjectDoesNotExist:
+                    print(f"Предмета “{subject}“ у ученика {child.full_name} "
+                          f"не найдено в базе")
