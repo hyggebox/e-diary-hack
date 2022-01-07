@@ -61,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Исправляет оценки и "
                                                  "комментарии в эл.дневнике "
                                                  "для указанного ученика")
-    parser.add_argument('name', nargs='?', default="Фролов Иван",
+    parser.add_argument("name", nargs="?", default="Фролов Иван",
                         help="имя ученика")
     parser.add_argument("-s", "--subjects", nargs="+", type=str)
     args = parser.parse_args()
