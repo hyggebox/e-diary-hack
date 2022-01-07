@@ -4,7 +4,7 @@ import random
 
 import django
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
@@ -72,6 +72,9 @@ if __name__ == "__main__":
         child = find_child(args.name)
     except ObjectDoesNotExist:
         print(f"Ученика с именем {args.name} нет в базе данных")
+    except MultipleObjectsReturned:
+        print(f"Найдено несколько учеников с именем {args.name}. "
+              f"Уточните полное имя")
     else:
         fix_marks(child)
         remove_chastisements(child)
