@@ -48,7 +48,7 @@ def create_commendation(schoolkid, subject_title):
                      "Теперь у тебя точно все получится!"]
     lesson = Lesson.objects.filter(year_of_study=schoolkid.year_of_study,
                                    group_letter=schoolkid.group_letter,
-                                   subject__title=subject_title).first()
+                                   subject__title=subject_title).order_by("-date")[0:1].get()
     if lesson:
         Commendation.objects.create(
             text=random.choice(commendations),
@@ -57,8 +57,6 @@ def create_commendation(schoolkid, subject_title):
             subject=lesson.subject,
             teacher=lesson.teacher
         )
-    else:
-        raise ObjectDoesNotExist
 
 
 if __name__ == "__main__":
