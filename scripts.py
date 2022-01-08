@@ -4,8 +4,6 @@ import random
 
 import django
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
 
@@ -70,9 +68,9 @@ if __name__ == "__main__":
 
     try:
         child = find_child(args.name)
-    except ObjectDoesNotExist:
+    except Schoolkid.DoesNotExist:
         print(f"Ученика с именем {args.name} нет в базе данных")
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print(f"Найдено несколько учеников с именем {args.name}. "
               f"Уточните полное имя")
     else:
@@ -84,6 +82,6 @@ if __name__ == "__main__":
             for subject in subjects:
                 try:
                     create_commendation(child, subject.capitalize())
-                except ObjectDoesNotExist:
+                except Lesson.DoesNotExist:
                     print(f"Предмета “{subject}“ у ученика {child.full_name} "
                           f"не найдено в базе")
